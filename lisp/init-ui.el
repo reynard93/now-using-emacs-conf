@@ -104,8 +104,9 @@
 
 	;; Format: "(icon title help action face prefix suffix)"
 	(setq dashboard-navigator-buttons
-		`(((nil
-				 ,(concat "Email [" (shell-command-to-string "~/myBin/get-mu-unread-emails-num") "]") nil (lambda (&rest _) (mu4e)))
+		`((
+     ;;  (nil
+				 ;; ,(concat "Email [" (shell-command-to-string "~/myBin/get-mu-unread-emails-num") "]") nil (lambda (&rest _) (mu4e)))
 				(nil
 					"Todos" nil (lambda (&rest _) (find-file "~/notes/agenda.org")))
         ))))
@@ -117,7 +118,7 @@
 (defun mk/setup-font-faces ()
 	"Setup Fonts."
 	;; font faces only works in emacs GUI, terminal emcas should change terminal font instead
-  (let ((default-font "Cascadia Code") ;; IBM Plex Mono
+  (let ((default-font "Berkeley Mono") ;; IBM Plex Mono
          (font-size 19)
          (CJK-font "LXGW WenKai"))
     (when (display-graphic-p) 

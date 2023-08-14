@@ -56,7 +56,7 @@
   (require 'file-browser)
   (require 'git)
   (require 'init-proxy)
-  (require 'mail)
+  ;; (require 'mail)
   (require 'auto-insert)
   (require 'ai)
   (require 'browser)
@@ -79,6 +79,7 @@
   (require 'l-draw)
   ;; (require 'l-typst)
   (require 'l-general)) ;; l-general must loaded after l-rust
+  ;; (require 'l-typst)
 
 ;; remove old version native-compiled files
 (native-compile-prune-cache) 

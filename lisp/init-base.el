@@ -3,6 +3,65 @@
 ;;; Code:
 
 ;;; Trivil ==================================================
+
+;;; move to better-defaults custom file
+(use-package exec-path-from-shell
+  :straight t  ; This line ensures the package is installed using straight.el
+  :init
+  ;; This code will run before the package is loaded
+  (when (or (memq window-system '(mac ns x pgtk))
+            (unless (memq system-type '(ms-dos windows-nt))
+              (daemonp)))
+    (exec-path-from-shell-initialize))
+  :config
+  ;; This code will run after the package is loaded
+  (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO" "LANG" "LC_CTYPE" "NIX_SSL_CERT_FILE" "NIX_PATH"))
+    (add-to-list 'exec-path-from-shell-variables var)))
+
+(use-package dired
+  :straight nil
+  :ensure nil
+  :config
+  (setq delete-by-moving-to-trash t)
+  (setq dired-dwim-target t)
+  (setq dired-listing-switches
+        "-alh")
+  (setq dired-guess-shell-alist-user
+        '(("\\.pdf\\'" "open")
+          ("\\.docx\\'" "open")
+          ("\\.\\(?:djvu\\|eps\\)\\'" "open")
+          ("\\.\\(?:jpg\\|jpeg\\|png\\|gif\\|xpm\\)\\'" "open")
+          ("\\.\\(?:xcf\\)\\'" "open")
+          ("\\.csv\\'" "open")
+          ("\\.tex\\'" "open")
+          ("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\'"
+           "open")
+          ("\\.\\(?:mp3\\|flac\\)\\'" "open")
+          ("\\.html?\\'" "open")
+          ("\\.md\\'" "open")))
+
+  ;; always delete and copy recursively
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
+)
+
+(use-package smartparens
+  :init
+  (smartparens-global-mode t)
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
+  (sp-local-pair 'lisp-interaction-mode "'" nil :actions nil)
+  :config
+    (sp-with-modes
+        '(c++-mode objc-mode c-mode)
+      (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))))
+
+(use-package hungry-delete
+  :init
+  (global-hungry-delete-mode))
+
+(global-auto-revert-mode t)
+
 ;; @ delete file by moving to trash
 ;; change the behavior of delete-file and delete-directory function
 ;; (setq delete-by-moving-to-trash t)
@@ -375,7 +434,7 @@ Version 2016-04-04"
 (defun mk/set-env()
   "Set environment variables for Emacs"
   (interactive)
-  (setenv "GTAGSOBJDIRPREFIX" "/home/zarkli/.cache/gtags/"))
+  (setenv "GTAGSOBJDIRPREFIX" "/home/reynardlee/.cache/gtags/"))
 (add-hook 'emacs-startup-hook #'mk/set-env)
 
 ;;; My custom functions ===================================
