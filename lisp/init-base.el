@@ -3,7 +3,11 @@
 ;;; Code:
 
 ;;; Trivil ==================================================
-
+(require 'org-protocol)
+;; Enable kill ring integration for macOS clipboard
+(setq select-enable-clipboard t)
+;; (setq select-enable-primary t) |# ;; this interferes with meow visit and replace working WARNING!!!
+(defalias 'yes-or-no-p 'y-or-n-p)
 ;;; move to better-defaults custom file
 (use-package exec-path-from-shell
   :straight t  ; This line ensures the package is installed using straight.el

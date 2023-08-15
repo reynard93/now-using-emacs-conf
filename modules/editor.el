@@ -7,8 +7,8 @@
   indent-tabs-mode nil  ; use white spaces instead of tabs
 	evil-shift-width tab-width
 	scroll-margin 15
-  scroll-step 1
-	select-enable-clipboard nil)  ; make register indepentent from clipboard
+  scroll-step 1)
+;; select-enable-clipboard nil ; make register indepentent from clipboard
 
 
 ;; @ remember cursor position

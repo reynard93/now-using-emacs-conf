@@ -14,13 +14,51 @@
 
 ;;; Vue =====================================================
 ;; @ Custom vue mode based on web-mode
-(use-package web-mode)
+;; config for web mode
+(defun my-web-mode-indent-setup ()
+  ;; (setq web-mode-enable-current-element-highlight t)
+  ;; (setq web-mode-enable-current-column-highlight t)
+  (setq web-mode-style-padding 0)
+  (setq web-mode-script-padding 0) ; web-mode, vue sfc no padding in the script section
+  (setq web-mode-markup-indent-offset 2) ; web-mode, html tag in html file, default is 4
+  (setq web-mode-css-indent-offset 2)    ; web-mode, css in html file
+  (setq web-mode-code-indent-offset 2)   ; web-mode, js code in html file
+  )
+
+(use-package typescript-mode
+  :ensure t)
+
+(use-package web-mode
+  :ensure t
+  :config
+  (my-web-mode-indent-setup)
+  ;; :custom-face
+  ;; (web-mode-current-element-highlight-face
+  ;;  ((t (:background "#d9dbd7" :foreground "#2d3428"))))
+  ;; ;; light color for highlighting the current HTML element's column
+  ;; (web-mode-current-column-highlight-face
+  ;;  ((t (:background "#d9dbd7"))))
+)
 (define-derived-mode vue-mode web-mode "Vue")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 
 ;; eglot for vue-mode
 (with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs '(vue-mode . ("vls" "--stdio"))))
+  (add-to-list 'eglot-server-programs `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions (
+                         :typescript (:tsdk
+                        "/Users/reynardlee/.nvm/versions/node/v18.9.1/lib/node_modules/typescript/lib")
+                         :languageFeatures (:completion
+                                            (:defaultTagNameCase "both"
+                                                                 :defaultAttrNameCase "kebabCase"
+                                                                 :getDocumentNameCasesRequest nil
+                                                                 :getDocumentSelectionRequest nil)
+                                            :diagnostics
+                                            (:getDocumentVersionRequest nil))
+                         :documentFeatures (:documentFormatting
+                                            (:defaultPrintWidth 100
+                                                                :getDocumentPrintWidthRequest nil)
+                                            :documentSymbol t
+                                            :documentColor t))))))
 
 ;;; Trivial =================================================
 (defun mk/live-web-start()
@@ -64,4 +102,6 @@
 (mk/add-web-local-map-hook '(html-mode-hook mhtml-mode-hook vue-mode-hook css-mode-hook css-ts-mode)) ;; web, vue(defined in l-web.el) and css
 
 
+(use-package jest
+  :hook ((vue-mode . jest-minor-mode)(js-ts-mode . jest-minor-mode)))
 (provide 'l-web)

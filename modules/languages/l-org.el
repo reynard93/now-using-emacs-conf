@@ -180,4 +180,39 @@
 (add-hook 'org-mode-hook 'mk/org-local-keybinding-setup)
 
 
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
+         "* TODO [#B] %?\n  %i\n %U"
+         :empty-lines 1)
+        ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
+         "* %?\n  %i\n %U"
+         :empty-lines 1)
+        ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
+         "* TODO [#B] %?\n  %i\n %U"
+         :empty-lines 1)
+        ("s" "Slipbox" entry  (file "inbox.org")
+         "* %?\n")
+        ("S" "Code Snippet" entry
+         (file org-agenda-file-code-snippet)
+         "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
+        ("w" "work" entry (file+headline org-agenda-file-work "Work")
+         "* TODO [#A] %?\n  %i\n %U"
+         :empty-lines 1)
+        ("x" "Web Collections" entry
+         (file+headline org-agenda-file-note "Web")
+         "* %U %:annotation\n\n%:initial\n\n%?")
+        ("p" "Protocol" entry (file+headline org-agenda-file-note "Inbox")
+         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+      ("L" "Protocol Link" entry (file+headline org-agenda-file-note "Inbox")
+         "* %? [[%:link][%:description]] \nCaptured On: %U")
+        ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
+         "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
+         :empty-lines 1)
+        ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
+         "* TODO [#C] %?\n  %i\n %a \n %U"
+         :empty-lines 1)
+        ("j" "Journal Entry"
+         entry (file+datetree org-agenda-file-journal)
+         "* %?"
+         :empty-lines 1)))
 (provide 'l-org)

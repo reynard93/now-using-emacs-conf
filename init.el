@@ -57,12 +57,14 @@
   (require 'git)
   (require 'init-proxy)
   ;; (require 'mail)
+  (require 'init-syntaxcheck)
   (require 'auto-insert)
   (require 'ai)
   (require 'browser)
   (require 'info-config)
   (require 'emacs-developer)
-  (require 'hugo))
+  (require 'hugo)
+  (require 'osx-config))
 
 ;; load language
 (with-temp-message ""
