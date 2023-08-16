@@ -42,8 +42,24 @@
 (add-hook 'org-mode-hook #'org-indent-mode)
 
 ;;; org-agenda ==============================================
-(setq org-agenda-files
-  (list "~/notes/agenda.org"))
+(defvar org-agenda-dir ""
+  "gtd org files location")
+
+(defvar deft-dir ""
+  "deft org files locaiton")
+
+(setq org-agenda-dir "~/notes/")
+(setq deft-dir  "~/notes/")
+;; define the refile targets
+(setq org-agenda-file-note (expand-file-name "notes.org" org-agenda-dir))
+(setq org-agenda-file-gtd (expand-file-name "gtd.org" org-agenda-dir))
+(setq org-agenda-file-work (expand-file-name "work.org" org-agenda-dir))
+(setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
+(setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-agenda-dir))
+(setq org-default-notes-file (expand-file-name "gtd.org" org-agenda-dir))
+(setq org-agenda-file-blogposts (expand-file-name "all-posts.org" org-agenda-dir))
+(setq org-agenda-files (list org-agenda-file-gtd org-agenda-file-journal org-agenda-file-blogposts org-agenda-file-work org-agenda-file-note))
+
 
 ;;; Export ==================================================
 (setq org-export-with-toc t
@@ -96,29 +112,29 @@
 
 ;;; Fancy face ==============================================
 ;; @ most of the stuffs
-;; (use-package org-modern
-;; 	:config
-;; 	(setq
-;; 	  org-modern-star ["✿" "❀" "✜" "◉" "○" "✸" "✳" "◈" "◇"]
-;; 	  org-modern-priority
-;; 	  `((?A . ,(propertize "❗" 'face 'error))
-;; 		   (?B . ,(propertize "⚡" 'face 'warning))
-;; 		   (?C . ,(propertize "☕" 'face 'sucess)))
-;; 	  org-modern-todo-faces
-;; 	  '(("TODO" :background "#00b894" ;; green
-;; 			  :foreground "white")
-;; 		   ("PROG" :background "#e17055" ;; orange
-;; 			   :foreground "white")
-;; 		   ("PROJ" :background "#6c5ce7" ;; purple
-;; 			   :foreground "white")
-;; 		   ("BLOG" :background "#fdcb6e" ;; yellow
-;; 			   :foreground "black")
-;; 		   ("WAIT" :background "#ff7675" ;; grey
-;; 			   :foreground "white")
-;; 		   ("DONE" :background "#b2bec3" ;; grey
-;; 			   :foreground "white")
-;; 		   ("CANCELLED"  :foreground "#b2bec3")))
-;; 	(global-org-modern-mode))
+(use-package org-modern
+	:config
+	(setq
+	  org-modern-star ["✿" "❀" "✜" "◉" "○" "✸" "✳" "◈" "◇"]
+	  org-modern-priority
+	  `((?A . ,(propertize "❗" 'face 'error))
+		   (?B . ,(propertize "⚡" 'face 'warning))
+		   (?C . ,(propertize "☕" 'face 'sucess)))
+	  org-modern-todo-faces
+	  '(("TODO" :background "#00b894" ;; green
+			  :foreground "white")
+		   ("PROG" :background "#e17055" ;; orange
+			   :foreground "white")
+		   ("PROJ" :background "#6c5ce7" ;; purple
+			   :foreground "white")
+		   ("BLOG" :background "#fdcb6e" ;; yellow
+			   :foreground "black")
+		   ("WAIT" :background "#ff7675" ;; grey
+			   :foreground "white")
+		   ("DONE" :background "#b2bec3" ;; grey
+			   :foreground "white")
+		   ("CANCELLED"  :foreground "#b2bec3")))
+	(global-org-modern-mode))
 
 
 ;;; Facility ===============================================
@@ -178,7 +194,6 @@
   (keymap-local-set "C-c M-c p" #'org-priority))
 
 (add-hook 'org-mode-hook 'mk/org-local-keybinding-setup)
-
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")

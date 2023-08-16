@@ -225,8 +225,6 @@ don't need to add ':demand t' keyword to 'use-package' declearation."
     ;; TODO this is temporary, wait for news from evil-textobj-tree-sitter
 	  "[f" '(treesit-beginning-of-defun :which-key "func begin")
 	  "]f" '(treesit-end-of-defun :which-key "func end")
-	  "]a"  #'evil-forward-arg
-	  "[a"  #'evil-backward-arg
 	  "]s"  #'forward-sexp
 	  "[s"  #'backward-sexp
 	  "M-<backspace>" #'(lambda () (interactive) (progn (mk/delete-symbol-at-point) (evil-insert-state)) )

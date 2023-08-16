@@ -7,31 +7,36 @@
 ;; @ editor theme
 (use-package doom-themes
 	:defer t
-	;; :hook (server-after-make-frame .
-  ;;         (lambda ()
-  ;;           (progn
-  ;;             (load-theme 'doom-one-light t))))
-	:init
-	;; (load-theme 'doom-solarized-light t)
-  ;; (progn
-	;;   (load-theme 'doom-earl-grey t))
-  :config
-  (doom-themes-visual-bell-config)
-  (setq doom-themes-treemacs-theme "doom-one-light")
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))
-
-(use-package almost-mono-themes
+  :custom-face
+  (line-number
+   ((t ( :slant normal))))
+  (line-number-current-line
+   ((t ( :inherit nil
+         :inherit 'default
+         :slant normal
+         :weight semi-bold))))
   :hook (server-after-make-frame .
           (lambda ()
             (progn
-              (load-theme 'almost-mono-white t))))
+              (load-theme 'doom-nord-light t))))
+	:init
+	(load-theme 'doom-nord-light t)
   :config
-  ;; (load-theme 'almost-mono-black t)
-  ;; (load-theme 'almost-mono-gray t)
-  ;; (load-theme 'almost-mono-cream t)
-  (progn
-	  (load-theme 'almost-mono-white t)))
+  (doom-themes-visual-bell-config)
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
+
+;; (use-package almost-mono-themes
+;;   :hook (server-after-make-frame .
+;;           (lambda ()
+;;             (progn
+;;               (load-theme 'almost-mono-white t))))
+;;   :config
+;;   ;; (load-theme 'almost-mono-black t)
+;;   ;; (load-theme 'almost-mono-gray t)
+;;   ;; (load-theme 'almost-mono-cream t)
+;;   (progn
+;; 	  (load-theme 'almost-mono-white t)))
 
 (defun mk/setup-font-lock()
   "Set minimum font lock level for both treesit and font-lock"
@@ -119,7 +124,7 @@
 	"Setup Fonts."
 	;; font faces only works in emacs GUI, terminal emcas should change terminal font instead
   (let ((default-font "Berkeley Mono") ;; IBM Plex Mono
-         (font-size 16)
+         (font-size 15)
          (CJK-font "LXGW WenKai"))
     (when (display-graphic-p) 
 		  (when (member default-font (font-family-list))
