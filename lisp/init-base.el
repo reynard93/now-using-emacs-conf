@@ -29,25 +29,26 @@
   (setq delete-by-moving-to-trash t)
   (setq dired-dwim-target t)
   (setq dired-listing-switches
-        "-alh")
+    "-alh")
+  (setq insert-directory-program "gls" dired-use-ls-dired t)
   (setq dired-guess-shell-alist-user
-        '(("\\.pdf\\'" "open")
-          ("\\.docx\\'" "open")
-          ("\\.\\(?:djvu\\|eps\\)\\'" "open")
-          ("\\.\\(?:jpg\\|jpeg\\|png\\|gif\\|xpm\\)\\'" "open")
-          ("\\.\\(?:xcf\\)\\'" "open")
-          ("\\.csv\\'" "open")
-          ("\\.tex\\'" "open")
-          ("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\'"
-           "open")
-          ("\\.\\(?:mp3\\|flac\\)\\'" "open")
-          ("\\.html?\\'" "open")
-          ("\\.md\\'" "open")))
+    '(("\\.pdf\\'" "open")
+       ("\\.docx\\'" "open")
+       ("\\.\\(?:djvu\\|eps\\)\\'" "open")
+       ("\\.\\(?:jpg\\|jpeg\\|png\\|gif\\|xpm\\)\\'" "open")
+       ("\\.\\(?:xcf\\)\\'" "open")
+       ("\\.csv\\'" "open")
+       ("\\.tex\\'" "open")
+       ("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\'"
+         "open")
+       ("\\.\\(?:mp3\\|flac\\)\\'" "open")
+       ("\\.html?\\'" "open")
+       ("\\.md\\'" "open")))
 
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies 'always)
-)
+  )
 
 (use-package smartparens
   :init
