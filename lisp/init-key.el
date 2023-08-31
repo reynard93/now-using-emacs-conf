@@ -94,7 +94,6 @@ Example:
   ;; vc commands (git)
   ;; C-x v (SPC x SPC v)
   (keymap-global-set "C-x v p" #'vc-prepare-patch)
-  (keymap-global-set "C-x v H" #'diff-hl-show-hunk)
   ;; diff (SPC x SPC d)
   (keymap-global-set "C-x d" #'diff)
   ;; C-M- (SPC g) ===============================================================
@@ -222,8 +221,8 @@ Example:
   ;; open(o)
   (mk/define&set-keymap
     "C-c o" keymap/open
-    '(("-" . dired-jump)
-       ("=" . project-dired)
+    '(("-" . vterm)
+       ("=" . others/project-vterm)
        ("s" . dired-sidebar-toggle-sidebar)
        ("a" . org-agenda)
        ("A" . (lambda () (interactive) (find-file "~/notes/agenda.org")))
@@ -242,7 +241,7 @@ Example:
        ("p" . project-switch-project)
        ("P" . project-forget-project)
        ("e" . flymake-show-project-diagnostics)
-       ("s" . project-eshell)
+       ("s" . others/project-vterm)
        ("S" . project-async-shell-command)
        ("k" . project-kill-buffers)))
 
@@ -635,40 +634,15 @@ point."
   (interactive)
   (highlight-phrase (thing-at-point 'symbol)))
 
-(defun org-capture-inbox ()
+(defun others/project-vterm ()
   (interactive)
-  (call-interactively 'org-store-link)
-  (org-capture nil "i"))
-(defun org-link-line-and-capture ()
-  "Create a link to the current line and add a checkbox item using org-capture."
-  (interactive)
-  (let* ((line-number (line-number-at-pos))
-          (description (read-string "Enter description: "))
-          (link-text (format "[[%s::%d][%s]]" (buffer-file-name) line-number description)))
-    (org-capture "checkitem" "i")
-    (insert link-text)
-    (org-capture-finalize)))
-
-(defun org-insert-picture-from-dired ()
-  "Open a dired buffer at a hardcoded path and let the user select images to insert into the Org-mode buffer."
-  (interactive)
-  (let ((image-dir "~/notes")  ; Hardcoded directory path
-         (org-buffer (current-buffer))  ; Remember the current (Org) buffer
-         (my-find-args "-type f -path '*-img/*'"))  ; Note the change of variable name
-    (when (file-directory-p image-dir)
-      (find-dired image-dir my-find-args)  ; Using the new variable name
-      (message "Mark images with `m` and press `i` to insert into Org buffer.")
-      (local-set-key (kbd "i")
-        (lambda ()
-          (interactive)
-          (let ((selected-images (dired-get-marked-files)))
-            (switch-to-buffer org-buffer)  ; Switch back to the original Org buffer
-            (when (eq major-mode 'org-mode)
-              (dolist (img selected-images)
-                (insert (format "#+ATTR_ORG: :width 600\n[[file:%s]]\n" img)))
-              (org-display-inline-images))
-            ))))))
-
+  (defvar vterm-buffer-name)
+  (let* ((default-directory (project-root     (project-current t)))
+          (vterm-buffer-name (project-prefixed-buffer-name "vterm"))
+          (vterm-buffer (get-buffer vterm-buffer-name)))
+    (if (and vterm-buffer (not current-prefix-arg))
+      (pop-to-buffer vterm-buffer  (bound-and-true-p display-comint-buffer-action))
+      (vterm))))
 
 ;; Evil Related
 ;;
