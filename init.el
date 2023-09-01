@@ -3,7 +3,14 @@
 ;;; Code:
 
 ;; straight.el
-(setq straight-repository-branch "develop")
+;; (setq straight-repository-branch "develop")
+
+;; (setq debug-on-error t)
+
+(define-obsolete-variable-alias
+  'native-comp-deferred-compilation-deny-list
+  'native-comp-jit-compilation-deny-list
+  "Renamed in emacs#95692f6")
 
 (setq straight-base-dir (expand-file-name ".local" user-emacs-directory))
 (defvar bootstrap-version)

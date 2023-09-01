@@ -127,7 +127,6 @@ where 1 is the innermost level."
     '("'" . repeat)
     '("<escape>" . ignore)
 
-    ;; < >
     '("<" . indent-rigidly-left)
     '(">" . indent-rigidly-right)
     '("?" . eldoc)

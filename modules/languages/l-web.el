@@ -66,6 +66,7 @@ Due to web-mode bug for emacs client, some customizable values need to be set af
 
 (define-derived-mode vue-mode web-mode "Vue")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
 ;; eglot for vue-mode
 (with-eval-after-load 'eglot
