@@ -3,11 +3,7 @@
 ;;; Code:
 
 ;; straight.el
-;; (setq straight-repository-branch "develop")
-(define-obsolete-variable-alias
-  'native-comp-deferred-compilation-deny-list
-  'native-comp-jit-compilation-deny-list
-  "Renamed in emacs#95692f6")
+(setq straight-repository-branch "develop")
 
 (setq straight-base-dir (expand-file-name ".local" user-emacs-directory))
 (defvar bootstrap-version)
@@ -31,8 +27,8 @@
 ;;   ;; To disable collection of benchmark data after init is done.
 ;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-(setq user-full-name "Meow King"
-  user-mail-address "mr.meowking@anche.no"
+(setq user-full-name "Reynard Lee"
+  user-mail-address "yylee.rey@gmail.com"
   default-directory (expand-file-name "~/.emacs.d"))
 
 ;; add load path
@@ -56,7 +52,7 @@
   (require 'file-browser)
   (require 'git)
   (require 'init-proxy)
-  ;; (require 'mail)
+  (require 'mail)
   (require 'init-syntaxcheck)
   (require 'auto-insert)
   (require 'ai)

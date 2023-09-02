@@ -46,7 +46,7 @@
   "gtd org files location")
 
 (defvar deft-dir ""
-  "deft org files locaiton")
+  "deft org files location")
 
 (setq org-agenda-dir "~/notes/")
 (setq deft-dir  "~/notes/")
@@ -165,13 +165,6 @@
 ;; 		org-tree-slide-email "mr.ziqiyang@gmail.com"))
 
 ;;; Keybindings =============================================
-;; (use-package evil-org
-;;   :straight (:host github :repo "Somelauw/evil-org-mode")
-;;   :after org
-;;   :hook ((org-mode . (lambda () (evil-org-mode))))
-;;   :config
-;;   (require 'evil-org-agenda)
-;;   (evil-org-agenda-set-keys))
 
 (defun mk/org-local-keybinding-setup()
   ;; Cuz C-c C-c is binded by `org-ctrl-c-ctrl-c', we use M- here.

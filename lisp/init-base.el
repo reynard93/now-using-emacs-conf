@@ -311,9 +311,9 @@ Version 2016-04-04"
     super-save-idle-duration 0.5)) ;; 0.5s idle
 
 ;;; Waketime ================================================
-(use-package wakatime-mode
-	:config
-	(global-wakatime-mode))
+;; (use-package wakatime-mode
+;; 	:config
+;; 	(global-wakatime-mode))
 
 ;;; Zoxide ==================================================
 (use-package zoxide)
