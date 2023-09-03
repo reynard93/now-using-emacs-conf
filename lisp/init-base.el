@@ -310,11 +310,6 @@ Version 2016-04-04"
     super-save-auto-save-when-idle t
     super-save-idle-duration 0.5)) ;; 0.5s idle
 
-;;; Waketime ================================================
-;; (use-package wakatime-mode
-;; 	:config
-;; 	(global-wakatime-mode))
-
 ;;; Zoxide ==================================================
 (use-package zoxide)
 

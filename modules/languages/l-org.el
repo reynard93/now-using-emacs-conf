@@ -20,7 +20,8 @@
 	  org-yank-adjusted-subtrees t 
 	  org-image-actual-width nil ;; don't use actual image size
 	  org-log-done 'time
-	  ;; org-priority-faces ;; tweak org-modern buildin symbol instead
+    org-agenda-hide-tags-regexp "."
+    ;; org-priority-faces ;; tweak org-modern buildin symbol instead
 	  ;;   '((?A :foreground "#ff6c6b" :weight bold)
 	  ;;     (?B :foreground "#98be65" :weight bold)
 	  ;;     (?C :foreground "#c678dd" :weight bold))
@@ -51,22 +52,26 @@
 (setq org-agenda-dir "~/notes/")
 (setq deft-dir  "~/notes/")
 ;; define the refile targets
+(setq org-agenda-file-gtd (expand-file-name "agenda.org" org-agenda-dir));;; when you know both topic and when occur
 (setq org-agenda-file-note (expand-file-name "notes.org" org-agenda-dir))
+(setq org-agenda-file-inbox (expand-file-name "inbox.org" org-agenda-dir))
 (setq org-agenda-file-gtd (expand-file-name "gtd.org" org-agenda-dir))
 (setq org-agenda-file-work (expand-file-name "work.org" org-agenda-dir))
 (setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
 (setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-agenda-dir))
 (setq org-default-notes-file (expand-file-name "gtd.org" org-agenda-dir))
 (setq org-agenda-file-blogposts (expand-file-name "all-posts.org" org-agenda-dir))
-(setq org-agenda-files (list org-agenda-file-gtd org-agenda-file-journal org-agenda-file-blogposts org-agenda-file-work org-agenda-file-note))
-
-
-;;; Export ==================================================
+(setq org-agenda-files (list org-agenda-file-gtd org-agenda-file-journal org-agenda-file-blogposts org-agenda-file-work org-agenda-file-note org-agenda-file-inbox));;; Export ==================================================
 (setq org-export-with-toc t
 	org-export-with-footnotes t
 	org-export-coding-system 'utf-8
 	org-export-headline-levels 4
 	org-export-with-smart-quotes t)
+(setq org-agenda-prefix-format
+  '((agenda . " %i %-12:c%?-12t% s")
+     (todo   . " ")
+     (tags   . " %i %-12:c")
+     (search . " %i %-12:c")))
 
 ;; @ latex export
 ;; Though the two lines below are recommended by offical, they makes error when I change latex compiler to xelatex.
@@ -171,7 +176,7 @@
   (keymap-local-unset "C-c C-c")
 
   (keymap-local-set "<tab>" #'org-cycle)
-  (keymap-local-set "C-S-<return>" #'org-insert-subheading)
+  (keymap-local-set "C-S-<return>"#'org-insert-subheading)
   
   (keymap-local-set "C-c C-c" #'org-ctrl-c-ctrl-c)
   
@@ -188,39 +193,66 @@
 
 (add-hook 'org-mode-hook 'mk/org-local-keybinding-setup)
 
+(defun org-capture-mail ()
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture nil "@"))
+
+(defun my-mu4e-headers-mode-setup ()
+  (define-key mu4e-headers-mode-map (kbd "C-i c") 'org-capture-mail))
+
+(defun my-mu4e-view-mode-setup ()
+  (define-key mu4e-view-mode-map (kbd "C-c c") 'org-capture-mail))
+
+(add-hook 'org-capture-mode-hook 'delete-other-windows)
+;; headers one don't work for now
+(add-hook 'mu4e-headers-mode-hook 'my-mu4e-headers-mode-setup)
+(add-hook 'mu4e-view-mode-hook 'my-mu4e-view-mode-setup)
+
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
-         "* TODO [#B] %?\n  %i\n %U"
-         :empty-lines 1)
-        ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
-         "* %?\n  %i\n %U"
-         :empty-lines 1)
-        ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
-         "* TODO [#B] %?\n  %i\n %U"
-         :empty-lines 1)
-        ("s" "Slipbox" entry  (file "inbox.org")
-         "* %?\n")
-        ("S" "Code Snippet" entry
-         (file org-agenda-file-code-snippet)
-         "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
-        ("w" "work" entry (file+headline org-agenda-file-work "Work")
-         "* TODO [#A] %?\n  %i\n %U"
-         :empty-lines 1)
-        ("x" "Web Collections" entry
-         (file+headline org-agenda-file-note "Web")
-         "* %U %:annotation\n\n%:initial\n\n%?")
-        ("p" "Protocol" entry (file+headline org-agenda-file-note "Inbox")
-         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-      ("L" "Protocol Link" entry (file+headline org-agenda-file-note "Inbox")
-         "* %? [[%:link][%:description]] \nCaptured On: %U")
-        ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
-         "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
-         :empty-lines 1)
-        ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
-         "* TODO [#C] %?\n  %i\n %a \n %U"
-         :empty-lines 1)
-        ("j" "Journal Entry"
-         entry (file+datetree org-agenda-file-journal)
-         "* %?"
-         :empty-lines 1)))
+  `(("i" "Inbox" entry  (file "inbox.org")
+      ,(concat "* TODO %?\n"
+         "/Entered on/ %U"))
+     ("@" "Inbox [mu4e]" entry (file "inbox.org")
+       ,(concat "* TODO Process \"%a\" %?\n"
+          "/Entered on/ %U"))
+     ("m" "Meeting" entry  (file+headline "agenda.org" "Future")
+       ,(concat "* %? :meeting:\n"
+          "<%<%Y-%m-%d %a %H:00>>"))
+     ))
+;; (setq org-capture-templates
+;;   '(("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
+;;       "* TODO [#B] %?\n  %i\n %U"
+;;       :empty-lines 1)
+;;      ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
+;;        "* %?\n  %i\n %U"
+;;        :empty-lines 1)
+;;      ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
+;;        "* TODO [#B] %?\n  %i\n %U"
+;;        :empty-lines 1)
+;;      ("s" "Slipbox" entry  (file "inbox.org")
+;;        "* %?\n")
+;;      ("S" "Code Snippet" entry
+;;        (file org-agenda-file-code-snippet)
+;;        "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
+;;      ("w" "work" entry (file+headline org-agenda-file-work "Work")
+;;        "* TODO [#A] %?\n  %i\n %U"
+;;        :empty-lines 1)
+;;      ("x" "Web Collections" entry
+;;        (file+headline org-agenda-file-note "Web")
+;;        "* %U %:annotation\n\n%:initial\n\n%?")
+;;      ("p" "Protocol" entry (file+headline org-agenda-file-note "Inbox")
+;;        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+;;      ("L" "Protocol Link" entry (file+headline org-agenda-file-note "Inbox")
+;;        "* %? [[%:link][%:description]] \nCaptured On: %U")
+;;      ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
+;;        "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
+;;        :empty-lines 1)
+;;      ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
+;;        "* TODO [#C] %?\n  %i\n %a \n %U"
+;;        :empty-lines 1)
+;;      ("j" "Journal Entry"
+;;        entry (file+datetree org-agenda-file-journal)
+;;        "* %?"
+;;        :empty-lines 1)))
 (provide 'l-org)

@@ -81,6 +81,10 @@
   (keymap-global-set "C-c z s" #'desktop-save-in-desktop-dir)
   (keymap-global-set "C-c z l" #'desktop-load-file)
 
+  ;; agenda(a)
+  (which-key-add-key-based-replacements "C-c a" "agenda")
+  (keymap-global-set "C-c a a" #'org-agenda)
+
   ;; buffer(b)
   (which-key-add-key-based-replacements "C-c b" "buffer")
   (keymap-global-set "C-c b a" #'consult-buffer)
@@ -293,7 +297,13 @@
   (keymap-global-set "C-c w L" #'buf-move-right)
   (keymap-global-set "C-c w H" #'buf-move-left)
   (keymap-global-set "C-c w J" #'buf-move-down)
-  (keymap-global-set "C-c w K" #'buf-move-up))
+  (keymap-global-set "C-c w K" #'buf-move-up)
+
+  ;; org(i) idk i for notes inbox?
+  (which-key-add-key-based-replacements "C-c i" "org")
+  (keymap-global-set "C-c i c" 'org-capture)
+  (keymap-global-set "C-c i i" 'org-capture-inbox)
+  )
 
 (use-package which-key
   :init
@@ -576,6 +586,11 @@ point."
   "Highlight all the symbols is that is the same of the one at point"
   (interactive)
   (highlight-phrase (thing-at-point 'symbol)))
+
+(defun org-capture-inbox ()
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture nil "i"))
 
 ;; Evil Related
 ;;
