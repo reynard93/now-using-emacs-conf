@@ -176,7 +176,7 @@
   (keymap-local-unset "C-c C-c")
 
   (keymap-local-set "<tab>" #'org-cycle)
-  (keymap-local-set "C-S-<return>"#'org-insert-subheading)
+  (keymap-local-set "C-S-<return>" #'org-insert-subheading)
   
   (keymap-local-set "C-c C-c" #'org-ctrl-c-ctrl-c)
   
@@ -205,7 +205,6 @@
   (define-key mu4e-view-mode-map (kbd "C-c c") 'org-capture-mail))
 
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
-;; headers one don't work for now
 (add-hook 'mu4e-headers-mode-hook 'my-mu4e-headers-mode-setup)
 (add-hook 'mu4e-view-mode-hook 'my-mu4e-view-mode-setup)
 
@@ -219,6 +218,9 @@
      ("m" "Meeting" entry  (file+headline "agenda.org" "Future")
        ,(concat "* %? :meeting:\n"
           "<%<%Y-%m-%d %a %H:00>>"))
+     ("n" "Note" entry  (file "notes.org")
+       ,(concat "* Note (%a)\n"
+          "/Entered on/ %U\n" "\n" "%?"))
      ))
 ;; (setq org-capture-templates
 ;;   '(("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")

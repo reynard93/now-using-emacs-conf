@@ -84,6 +84,12 @@
   ;; agenda(a)
   (which-key-add-key-based-replacements "C-c a" "agenda")
   (keymap-global-set "C-c a a" #'org-agenda)
+  
+  ;; org(i) idk i for notes inbox?
+  (which-key-add-key-based-replacements "C-c i" "org")
+  (keymap-global-set "C-c i c" 'org-capture)
+  (keymap-global-set "C-c i i" 'org-capture-inbox)
+  (keymap-global-set "C-c i l" 'org-link-line-and-capture)
 
   ;; buffer(b)
   (which-key-add-key-based-replacements "C-c b" "buffer")
@@ -298,11 +304,6 @@
   (keymap-global-set "C-c w H" #'buf-move-left)
   (keymap-global-set "C-c w J" #'buf-move-down)
   (keymap-global-set "C-c w K" #'buf-move-up)
-
-  ;; org(i) idk i for notes inbox?
-  (which-key-add-key-based-replacements "C-c i" "org")
-  (keymap-global-set "C-c i c" 'org-capture)
-  (keymap-global-set "C-c i i" 'org-capture-inbox)
   )
 
 (use-package which-key
@@ -591,7 +592,15 @@ point."
   (interactive)
   (call-interactively 'org-store-link)
   (org-capture nil "i"))
-
+(defun org-link-line-and-capture ()
+  "Create a link to the current line and add a checkbox item using org-capture."
+  (interactive)
+  (let* ((line-number (line-number-at-pos))
+          (description (read-string "Enter description: "))
+          (link-text (format "[[%s::%d][%s]]" (buffer-file-name) line-number description)))
+    (org-capture "checkitem" "i")
+    (insert link-text)
+    (org-capture-finalize)))
 ;; Evil Related
 ;;
 ;; (defun mk/evil-search-symbol-forward ()
