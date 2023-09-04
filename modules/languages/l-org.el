@@ -43,25 +43,27 @@
 (add-hook 'org-mode-hook #'org-indent-mode)
 
 ;;; org-agenda ==============================================
-(defvar org-agenda-dir ""
-  "gtd org files location")
-
-(defvar deft-dir ""
-  "deft org files location")
-
 (setq org-agenda-dir "~/notes/")
 (setq deft-dir  "~/notes/")
+
 ;; define the refile targets
 (setq org-agenda-file-gtd (expand-file-name "agenda.org" org-agenda-dir));;; when you know both topic and when occur
-(setq org-agenda-file-note (expand-file-name "notes.org" org-agenda-dir))
+(setq org-agenda-file-projects (expand-file-name "projects.org" org-agenda-dir));;; when you know both topic and when occur
+(setq org-agenda-file-notes (expand-file-name "notes.org" org-agenda-dir))
 (setq org-agenda-file-inbox (expand-file-name "inbox.org" org-agenda-dir))
-(setq org-agenda-file-gtd (expand-file-name "gtd.org" org-agenda-dir))
-(setq org-agenda-file-work (expand-file-name "work.org" org-agenda-dir))
-(setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
-(setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-agenda-dir))
-(setq org-default-notes-file (expand-file-name "gtd.org" org-agenda-dir))
-(setq org-agenda-file-blogposts (expand-file-name "all-posts.org" org-agenda-dir))
-(setq org-agenda-files (list org-agenda-file-gtd org-agenda-file-journal org-agenda-file-blogposts org-agenda-file-work org-agenda-file-note org-agenda-file-inbox));;; Export ==================================================
+;; (setq org-agenda-file-work (expand-file-name "work.org" org-agenda-dir))
+;; (setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
+;; (setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-agenda-dir))
+;; (setq org-agenda-file-blogposts (expand-file-name "all-posts.org" org-agenda-dir))
+
+(setq org-agenda-files (list org-agenda-file-gtd  org-agenda-file-notes org-agenda-file-inbox org-agenda-file-projects));;; Export
+(setq org-refile-targets
+  '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+
+;; (setq org-agenda-files (list org-agenda-file-gtd org-agenda-file-journal org-agenda-file-blogposts org-agenda-file-work org-agenda-file-note org-agenda-file-inbox org-agenda-file-projects));;; Export
+
 (setq org-export-with-toc t
 	org-export-with-footnotes t
 	org-export-coding-system 'utf-8
