@@ -32,6 +32,7 @@
 	  org-todo-keywords ; This overwrites the default Doom org-todo-keywords
 	  '((sequence
 			  "TODO(t)"                ; A task that is ready to be tackled
+        "NEXT(n)"  
 			  "PROJ(p)"                ; A project that contains other tasks
 			  "PROG(g)"                ; programming
 			  "BLOG(b)"                ; Blog writing assignments
@@ -61,6 +62,49 @@
   '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
 (setq org-refile-use-outline-path 'file)
 (setq org-outline-path-complete-in-steps nil)
+
+(setq org-agenda-custom-commands
+  '(("g" "Get Things Done (GTD)"
+      ((agenda ""
+         ((org-agenda-skip-function
+            '(org-agenda-skip-entry-if 'deadline))
+           (org-deadline-warning-days 0)))
+        (todo "NEXT"
+          ((org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'deadline))
+            (org-agenda-prefix-format "  %i %-12:c [%e] ")
+            (org-agenda-overriding-header "\nTasks\n")))
+        (agenda nil
+          ((org-agenda-entry-types '(:deadline))
+            (org-agenda-format-date "")
+            (org-deadline-warning-days 7)
+            (org-agenda-skip-function
+              '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+            (org-agenda-overriding-header "\nDeadlines")))
+        (tags-todo "inbox"
+          ((org-agenda-prefix-format "  %?-12t% s")
+            (org-agenda-overriding-header "\nInbox\n")))
+        (tags "CLOSED>=\"<today>\""
+          ((org-agenda-overriding-header "\nCompleted today\n")))))))
+
+(setq org-agenda-files 
+  (mapcar 'file-truename 
+	  (file-expand-wildcards "~/notes/*.org")))
+;; Save the corresponding buffers
+(defun gtd-save-org-buffers ()
+  "Save `org-agenda-files' buffers without user confirmation.
+See also `org-save-all-org-buffers'"
+  (interactive)
+  (message "Saving org-agenda-files buffers...")
+  (save-some-buffers t (lambda () 
+			                   (when (member (buffer-file-name) org-agenda-files) 
+			                     t)))
+  (message "Saving org-agenda-files buffers... done"))
+
+;; Add it after refile
+(advice-add 'org-refile :after
+	(lambda (&rest _)
+	  (gtd-save-org-buffers)))
 
 ;; (setq org-agenda-files (list org-agenda-file-gtd org-agenda-file-journal org-agenda-file-blogposts org-agenda-file-work org-agenda-file-note org-agenda-file-inbox org-agenda-file-projects));;; Export
 
@@ -112,6 +156,13 @@
   )
 
 (add-hook 'after-init-hook #'mk/org-export-latex-init)
+
+(defun log-todo-next-creation-date (&rest ignore)
+  "Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
+  (when (and (string= (org-get-todo-state) "NEXT")
+          (not (org-entry-get nil "ACTIVATED")))
+    (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
+(add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
 
 ;; @ beamer (latex presentation)
 (setq org-beamer-frame-level 2)
