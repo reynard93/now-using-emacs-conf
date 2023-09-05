@@ -336,7 +336,7 @@
   (interactive)
   (let (
          ;; (command-prefix "hyprctl dispatch exec '[workspace 1 slien; float; size 90% 40%; move 5% 58%]  kitty -d ")
-         (command-prefix "kitty --class floating -d ")) ;; right parenthesis is needed to be added after concatance
+         (command-prefix "kitty -d ")) ;; right parenthesis is needed to be added after concatance
     (if (project-current)
       (start-process-shell-command "open terminal" "*terminal*"
         (concat command-prefix (project-root (project-current))))
@@ -349,7 +349,7 @@
   (interactive)
   (let (
          ;; (command-prefix "hyprctl dispatch exec '[workspace 1 slien; float; size 90% 40%; move 5% 58%]  kitty -d ")
-         (command-prefix "kitty --class floating -d ")) ;; right parenthesis is needed to be added after concatance
+         (command-prefix "kitty -d ")) ;; right parenthesis is needed to be added after concatance
     (start-process-shell-command "open terminal" "*terminal*"
       ;; (concat command-prefix (file-name-directory buffer-file-name) "'")
       (concat command-prefix (file-name-directory buffer-file-name)))))
