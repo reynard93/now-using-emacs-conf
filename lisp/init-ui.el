@@ -51,7 +51,7 @@
   (setq font-lock-maximum-decoration 1) ;; font lock
   ;; setup jit-lock
   (setq jit-lock-chunk-size 4096
-    jit-lock-defer-time 0.25
+    ;; jit-lock-defer-time 0.25
     jit-lock-stealth-time 1.25))
 
 (add-hook 'after-init-hook #'mk/setup-font-lock())
