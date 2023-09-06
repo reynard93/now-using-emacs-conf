@@ -7,14 +7,21 @@
 ;; @ editor theme
 (use-package doom-themes
 	:defer t
-  :custom-face
-  (line-number
-   ((t ( :slant normal))))
-  (line-number-current-line
-   ((t ( :inherit nil
-         :inherit 'default
-         :slant normal
-         :weight semi-bold))))
+	;; :hook (server-after-make-frame .
+  ;;         (lambda ()
+  ;;           (progn
+  ;;             (load-theme 'doom-one-light t))))
+	:init
+	;; (load-theme 'doom-solarized-light t)
+  ;; (progn
+	;;   (load-theme 'doom-earl-grey t))
+  :config
+  (doom-themes-visual-bell-config)
+  (setq doom-themes-treemacs-theme "doom-one-light")
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
+
+(use-package almost-mono-themes
   :hook (server-after-make-frame .
           (lambda ()
             (progn
