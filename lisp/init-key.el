@@ -96,7 +96,8 @@ Example:
   ;; vc commands (git)
   ;; C-x v (SPC x SPC v)
   ;; vc-next-action is useful, and can be used to commit. see info:emacs#Basic VC Editing
-  ;; try use vc-next-action on vc-root-diff buffer
+  ;; try use vc-next-action on vc-root-diff buffer, or on vc-dir buffer (first
+  ;; mark using m/M, then v (add), then v (commit)
   (keymap-global-set "C-x v p" #'vc-prepare-patch)
   ;; diff (SPC x SPC d)
   (keymap-global-set "C-x d" #'diff)
@@ -320,7 +321,8 @@ Example:
   ;; window(w)
   (mk/define&set-keymap
     "C-c w" keymap/window
-    '(("w" . mk/ace-window-balance-window)
+    '(("f" . other-frame)
+       ("w" . mk/ace-window-balance-window)
        ("W" . ace-window)
        ("t" . others/window-split-toggle)
        ("d" . delete-window)
