@@ -50,7 +50,7 @@
   (require 'editor)
   (require 'completion)
   (require 'file-browser)
-  (require 'git)
+  ;; (require 'git)
   (require 'init-proxy)
   (require 'mail)
   (require 'init-syntaxcheck)

@@ -90,7 +90,7 @@
   (keymap-global-set "C-c i c" 'org-capture)
   (keymap-global-set "C-c i i" 'org-capture-inbox)
   (keymap-global-set "C-c i l" 'org-link-line-and-capture)
-  (keymap-global-set "C-c i p" 'org-insert-picture)
+  (keymap-global-set "C-c i p" 'org-insert-picture-from-dired)
 
   ;; buffer(b)
   (which-key-add-key-based-replacements "C-c b" "buffer")
@@ -532,7 +532,7 @@ it can also be achieved by binding tempel-next in tempel-map to the same key as 
 (defun mk/project-git()
   "Open gitui at project root.(Due to magit's poor performance)"
   (interactive)
-  (let ((command-prefix "kitty --class fullscreen -d ")) ;; right parenthesis is needed to be added after concatance
+  (let ((command-prefix "kitty -d ")) ;; right parenthesis is needed to be added after concatance
     (if (project-current)
       (start-process-shell-command "open terminal" "*terminal*"
         (concat command-prefix (project-root (project-current)) " ~/.emacs.d/gitui_start.sh"))
@@ -603,22 +603,26 @@ point."
     (insert link-text)
     (org-capture-finalize)))
 
-(defun org-insert-picture ()
-  "Open a dired buffer at a hardcoded path and let the user select an image to insert into the Org-mode buffer."
+(defun org-insert-picture-from-dired ()
+  "Open a dired buffer at a hardcoded path and let the user select images to insert into the Org-mode buffer."
   (interactive)
-  (let ((image-dir "~/notes/images"))  ; Hardcoded directory path
+  (let ((image-dir "~/notes")  ; Hardcoded directory path
+         (org-buffer (current-buffer))  ; Remember the current (Org) buffer
+         (my-find-args "-type f -path '*-img/*'"))  ; Note the change of variable name
     (when (file-directory-p image-dir)
-      (find-file image-dir)
-      (message "Select an image and press `i` to insert into Org buffer.")
+      (find-dired image-dir my-find-args)  ; Using the new variable name
+      (message "Mark images with `m` and press `i` to insert into Org buffer.")
       (local-set-key (kbd "i")
         (lambda ()
           (interactive)
-          (let ((selected-image (dired-get-filename)))
-            (switch-to-buffer-other-window (other-buffer))
+          (let ((selected-images (dired-get-marked-files)))
+            (switch-to-buffer org-buffer)  ; Switch back to the original Org buffer
             (when (eq major-mode 'org-mode)
-              (insert (format "[[file:%s]]" selected-image))
-              (org-display-inline-images));; if alrdy on will this cause it to toggle off
-            (message "Image inserted!")))))))
+              (dolist (img selected-images)
+                (insert (format "#+ATTR_ORG: :width 600\n[[file:%s]]\n" img)))
+              (org-display-inline-images))
+            ))))))  ; Explicitly kill the dired buffer
+
 
 ;; Evil Related
 ;;
