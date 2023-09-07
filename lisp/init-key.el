@@ -90,6 +90,7 @@
   (keymap-global-set "C-c i c" 'org-capture)
   (keymap-global-set "C-c i i" 'org-capture-inbox)
   (keymap-global-set "C-c i l" 'org-link-line-and-capture)
+  (keymap-global-set "C-c i p" 'org-insert-picture)
 
   ;; buffer(b)
   (which-key-add-key-based-replacements "C-c b" "buffer")
@@ -601,6 +602,24 @@ point."
     (org-capture "checkitem" "i")
     (insert link-text)
     (org-capture-finalize)))
+
+(defun org-insert-picture ()
+  "Open a dired buffer at a hardcoded path and let the user select an image to insert into the Org-mode buffer."
+  (interactive)
+  (let ((image-dir "~/notes/images"))  ; Hardcoded directory path
+    (when (file-directory-p image-dir)
+      (find-file image-dir)
+      (message "Select an image and press `i` to insert into Org buffer.")
+      (local-set-key (kbd "i")
+        (lambda ()
+          (interactive)
+          (let ((selected-image (dired-get-filename)))
+            (switch-to-buffer-other-window (other-buffer))
+            (when (eq major-mode 'org-mode)
+              (insert (format "[[file:%s]]" selected-image))
+              (org-display-inline-images));; if alrdy on will this cause it to toggle off
+            (message "Image inserted!")))))))
+
 ;; Evil Related
 ;;
 ;; (defun mk/evil-search-symbol-forward ()

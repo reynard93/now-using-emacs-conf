@@ -3,6 +3,7 @@
 ;;; Code:
 
 ;;; Common ==================================================
+(require 'dig-my-grave)
 
 (use-package org
   :straight nil
@@ -42,6 +43,7 @@
 			  "CANCELLED(c)" )))
   (push '("rust" . rust-ts) org-src-lang-modes))
 (add-hook 'org-mode-hook #'org-indent-mode)
+(add-hook 'org-mode-hook 'org-display-inline-images)
 
 ;;; org-agenda ==============================================
 (setq org-agenda-dir "~/notes/")
@@ -310,4 +312,51 @@ See also `org-save-all-org-buffers'"
 ;;        entry (file+datetree org-agenda-file-journal)
 ;;        "* %?"
 ;;        :empty-lines 1)))
+
+(use-package org-download
+  :after org
+  :defer nil
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir "~/notes/images")
+  (org-download-heading-lvl nil)
+  (org-download-timestamp "%Y%m%d-%H%M%S_")
+  (org-image-actual-width 300)
+  (org-download-screenshot-method "/opt/homebrew/bin/pngpaste %s")
+  :bind
+  ("C-M-y" . org-download-screenshot)
+  :config
+  (require 'org-download))
+
+(defun my-safe-delete-image (image-path)
+  (message "my-safe-delete-image called with path: %s" image-path)
+  "Safely delete IMAGE-PATH if it's not linked in any other Org file."
+  (let ((org-files (directory-files-recursively "~/notes/" "\\.org$"))
+         (linked-p nil))
+    (dolist (org-file org-files)
+      (with-temp-buffer
+        (insert-file-contents org-file)
+        (goto-char (point-min))
+        (when (re-search-forward (regexp-quote image-path) nil t)
+          (setq linked-p t))))
+    (unless linked-p
+      (delete-file image-path))))
+
+(defun my-delete-org-and-images ()
+  "Delete current Org file and linked images."
+  (interactive)
+  (when (eq major-mode 'org-mode)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "\\[\\[file:\\(.*?\\)\\]\\]" nil t)
+        (let ((image-path (match-string 1)))
+          (setq image-path (expand-file-name image-path "~/notes")) ; Modify image-path based on matched link
+          ;; (message "Deleting image: %s" image-path) ; Debugging message
+          (my-safe-delete-image image-path)))))
+  (let ((file-to-delete (buffer-file-name)))
+    (kill-buffer)
+    (when (file-exists-p file-to-delete)
+      (delete-file file-to-delete))))
+
+
 (provide 'l-org)
