@@ -30,6 +30,7 @@
   (keymap-global-set "C-u" #'scroll-down))
 
 (progn ;; insert mode (actually all mode)
+  (keymap-global-set "<tab>" #'completion-at-point)
   (keymap-global-set "C-M-@" #'forward-char)
   (setq meow--kbd-forward-char "C-M-@")
   (keymap-global-set "C-M-$" #'kill-line)
@@ -621,7 +622,7 @@ point."
               (dolist (img selected-images)
                 (insert (format "#+ATTR_ORG: :width 600\n[[file:%s]]\n" img)))
               (org-display-inline-images))
-            ))))))  ; Explicitly kill the dired buffer
+            ))))))
 
 
 ;; Evil Related

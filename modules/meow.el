@@ -2,7 +2,29 @@
 ;; Copyright (C) 2023  Ziqi Yang
 ;; Author: Ziqi Yang <mr.ziqiyang@gmail.com>
 ;; Comments:
+(defun mk/mark-line-visible ()
+  "Mark the visible part of the current line."
+  (interactive)
+  (back-to-indentation) ;; go to the non-whitespace line beginning
+  (push-mark (point))
+  ;; go to the last non-whitespace line end
+  (move-end-of-line nil)
+  (re-search-backward "^\\|[^[:space:]]")
+  (forward-char)
+  (activate-mark))
 
+(defun others/delete-enclosing-parentheses (&optional arg)
+  "Delete the innermost enclosing parentheses around point.
+With a prefix argument ARG N, delete the Nth level of enclosing parentheses,
+where 1 is the innermost level."
+  (interactive "*p")
+  (save-excursion
+    (backward-up-list arg)
+    (let ((beg (point)))
+      (forward-list)
+      (delete-char -1)
+      (goto-char beg)
+      (delete-char 1))))
 
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -11,6 +33,7 @@
   
   ;; motion
   (meow-motion-overwrite-define-key
+    '("<tab>" . completion-at-point)
     '("j" . meow-next)
     '("k" . meow-prev)
     '("<escape>" . ignore))
@@ -95,15 +118,18 @@
     '("w" . meow-mark-word)
     '("W" . meow-mark-symbol)
     '("x" . meow-line)
-    '("X" . consult-goto-line)
+    '("X" . mk/mark-line-visible)
     ;; '("X" . meow-goto-line)
     '("y" . meow-save)
     '("Y" . meow-sync-grab)
     '("z" . meow-pop-selection)
+    '("Z" . consult-goto-line)
     '("'" . repeat)
     '("<escape>" . ignore)
 
     ;; < >
+    '("<" . indent-rigidly-left)
+    '(">" . indent-rigidly-right)
     '("?" . eldoc)
     '("~" . upcase-dwim)
     '("/" . avy-goto-word-1)
@@ -112,15 +138,13 @@
     ;; M-; comment-dwim (toggle comment)
     ;; '("C-o" . xah/pop-local-mark-ring)
     ;; '("C-i" . pop-global-mark)
+    '("M-d" . others/delete-enclosing-parentheses)
     '("C-o" . xref-go-back)
     '("C-i" . xref-go-forward)
     '(":" . async-shell-command)
     '("C-m" . set-mark-command)
-    '("C-M-h" . combobulate-navigate-beginning-of-defun)
-    '("C-M-l" . combobulate-navigate-end-of-defun)
-    '("C-S-h" . combobulate-navigate-up)
-    '("C-S-l" . combobulate-navigate-down)
-    '("C-M-d" . combobulate-mark-defun)
+    '("C-M-h" . backward-sexp)
+    '("C-M-l" . forward-sexp)
     '("C-." . embark-act)
     '("C-S-v" . clipboard-yank)
     '("C-S-c" . clipboard-kill-ring-save)
