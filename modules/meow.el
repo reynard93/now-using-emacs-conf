@@ -2,15 +2,24 @@
 ;; Copyright (C) 2023  Ziqi Yang
 ;; Author: Ziqi Yang <mr.ziqiyang@gmail.com>
 ;; Comments:
+
 (defun mk/mark-line-visible ()
   "Mark the visible part of the current line."
   (interactive)
-  (back-to-indentation) ;; go to the non-whitespace line beginning
-  (push-mark (point))
-  ;; go to the last non-whitespace line end
-  (move-end-of-line nil)
-  (re-search-backward "^\\|[^[:space:]]")
-  (forward-char)
+  ;; (rx (or blank eol))
+  (if (looking-at "[[:blank:]]\\|$") ;; if a white space is in current point
+    ;; mark white spaces
+    (when-let ((bounds (bounds-of-thing-at-point 'whitespace)))
+      (push-mark (car bounds))
+      (goto-char (cdr bounds)))
+    ;; mark the whole visible line
+    (progn
+      (back-to-indentation) ;; go to the non-whitespace line beginning
+      (push-mark (point))
+      ;; go to the last non-whitespace line end
+      (move-end-of-line nil)
+      (re-search-backward "^\\|[^[:space:]]")
+      (forward-char)))
   (activate-mark))
 
 (defun others/delete-enclosing-parentheses (&optional arg)
@@ -25,6 +34,12 @@ where 1 is the innermost level."
       (delete-char -1)
       (goto-char beg)
       (delete-char 1))))
+
+(defun mk/better-back-to-indentation ()
+  "Back to indentation and enter into meow insert mode."
+  (interactive)
+  (back-to-indentation)
+  (meow-insert))
 
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -118,7 +133,7 @@ where 1 is the innermost level."
     '("w" . meow-mark-word)
     '("W" . meow-mark-symbol)
     '("x" . meow-line)
-    '("X" . mk/mark-line-visible)
+    '("X" . mk/mark-line-smart)
     ;; '("X" . meow-goto-line)
     '("y" . meow-save)
     '("Y" . meow-sync-grab)
@@ -140,6 +155,7 @@ where 1 is the innermost level."
     '("M-d" . others/delete-enclosing-parentheses)
     '("C-o" . xref-go-back)
     '("C-i" . xref-go-forward)
+    '("C-I" . mk/better-back-to-indentation)
     '(":" . async-shell-command)
     '("C-m" . set-mark-command)
     '("C-M-h" . backward-sexp)

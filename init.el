@@ -65,6 +65,7 @@
   (require 'ai)
   (require 'browser)
   (require 'info-config)
+  (require 'my-debug)
   (require 'emacs-developer)
   (require 'hugo)
   (require 'osx-config))
