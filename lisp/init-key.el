@@ -146,7 +146,9 @@ Example:
        ;; eldoc: use ? (binding in meow.el)
        ("D" . ,(mk/define&set-keymap
                  "C-c c D" keymap/code-debug
-                 '(("v" . mk/debug-with-valgrind))))
+                 '(("d" . mk/gf-debug)
+                    ("D" . mk/gdb-smart)
+                    ("v" . mk/debug-with-valgrind))))
        ("e" . consult-flymake)
        ("E" . combobulate-envelop)
        ("f" . ,(mk/define&set-keymap
@@ -333,8 +335,8 @@ Example:
   (mk/define&set-keymap
     "C-c w" keymap/window
     '(("f" . other-frame)
-       ("w" . mk/ace-window-balance-window)
-       ("W" . ace-window)
+       ("w" . ace-window)
+       ("W" . mk/ace-window-balance-window)
        ("t" . others/window-split-toggle)
        ("d" . delete-window)
        ("q" . delete-window)
@@ -366,8 +368,10 @@ Example:
     '(("t" . mk/translate)
        ("c" . jinx-correct)
        ("C" . list-colors-display)
+       ("d" . ediff-buffers)
        ("q" . save-buffers-kill-emacs)
        ("Q" . kill-emacs)
+       ("r" . restart-emacs)
        ;; ("s" . desktop-save-in-desktop-dir)
        ;; ("l" . desktop-load-file)
        ("p" . mk/copy-path-smart))))
@@ -670,14 +674,16 @@ point."
   (citre-global-update-database))
 
 (defun mk/highlight-symbol-buffer()
-  "Highlight all the symbols is that is the same of the one at point"
+  "Highlight all the symbols is that is the same of the one at point."
   (interactive)
-  (highlight-phrase (thing-at-point 'symbol)))
+  (let ((target (read-string "Highlight Symbol: "
+                  (thing-at-point 'symbol))))
+    (highlight-phrase target)))
 
 (defun others/project-vterm ()
   (interactive)
   (defvar vterm-buffer-name)
-  (let* ((default-directory (project-root     (project-current t)))
+  (let* ((default-directory (project-root (project-current t)))
           (vterm-buffer-name (project-prefixed-buffer-name "vterm"))
           (vterm-buffer (get-buffer vterm-buffer-name)))
     (if (and vterm-buffer (not current-prefix-arg))
