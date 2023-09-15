@@ -286,18 +286,6 @@ Version 2016-04-04"
 (use-package hideshow 
 	:hook ((prog-mode . mk/hs-hide-level-samrt)))
 
-;; @ vimmish-fold
-;; (use-package vimish-fold
-;;   :after evil)
-
-;; (use-package evil-vimish-fold
-;;   :after vimish-fold
-;;   :hook ((prog-mode conf-mode text-mode) . evil-vimish-fold-mode))
-
-;; @ tree-sitter powered fold capability
-;; TODO this pakcage(folk) is temporary, wait for news
-;; (use-package ts-fold
-;;   :straight (:type git :host github :repo "AndrewSwerlick/ts-fold" :branch "andrew-sw/treesit-el-support"))
 
 ;;; save file utility =======================================
 ;; when change window, lose focus & idle ...
@@ -318,18 +306,6 @@ Version 2016-04-04"
 ;; notice: in replace: !, y, n is the keybindings to replace all, replace current and not replace current
 (use-package color-rg
 	:straight (:host github :repo "manateelazycat/color-rg"))
-
-;; @ fuzzy finder ;; use consult-ripgrep instead
-;; (use-package affe
-;;   :straight (:host github :repo "minad/affe" :files ("*.el"))
-;;   :config
-;;   ;; Manual preview key for `affe-grep' 
-;;   (consult-customize affe-grep :preview-key '(:debounce 0.5 any))
-;; 	;; use orderless 
-;; 	(defun affe-orderless-regexp-compiler (input _type _ignorecase)
-;; 		(setq input (orderless-pattern-compiler input))
-;; 		(cons input (lambda (str) (orderless--highlight input str))))
-;; 	(setq affe-regexp-compiler #'affe-orderless-regexp-compiler))
 
 ;;; Todo highlight ==========================================
 (use-package hl-todo
@@ -370,10 +346,6 @@ Version 2016-04-04"
   (global-sideline-mode))
 
 (use-package sideline-flymake :defer 1)
-
-;; This package does badly (2023.08.30
-;; (use-package sideline-eldoc
-;;   :straight (:type git :host github :repo "ginqi7/sideline-eldoc"))
 
 ;; if run the following code on non-emacs-lisp mode using eldoc, then text-read-only error occurs
 ;; (defvar mk/sideline-eldoc--message "")

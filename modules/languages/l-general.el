@@ -3,42 +3,6 @@
 ;; 
 ;;; Code:
 
-;;; Treesitter ==============================================
-;; treesitter lang lib load path: /usr/local/lib and ~/.emacs.d/tree-sitter 
-;; use treesit-install-language-grammar to install lang by looking into
-;; treesit-language-source-alist variable
-;; for manual build: https://github.com/casouri/tree-sitter-module
-;; additional resources:
-;; starter-guide: https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
-;; https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html
-
-;; currently, emacs lacks buildin rust mode, we directly enable rust-ts-mode
-;; but(guess) I think though with ts support, it still lack some feature. For more feature, you
-;; should use third-party rust-mode instead.
-
-(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.jsp\\'" . mhtml-mode))
-(add-to-list 'auto-mode-alist '("go\\.mod\\'" . go-mod-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(yaml\\|yml\\)\\'" . yaml-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(mermaid\\|mmd\\)\\'" . mermaid-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(c\\|h\\)\\'" . c-ts-mode))
-
-;; manual(use script) build(recommend, since more language are included, but you need need to manualy hook the extra langauge. For build script, see above information), or use nf/treesit-install-all-languages for those languages defined in treesit-auto
-(defun nf/treesit-install-all-languages ()
-  "Install all languages specified by `treesit-language-source-alist'."
-  (interactive)
-  (let ((languages (mapcar 'car treesit-language-source-alist)))
-    (dolist (lang languages)
-	    (treesit-install-language-grammar lang)
-	    (message "`%s' parser was installed." lang)
-	    (sit-for 0.75))))
-
-;; @ Automatically install and use tree-sitter major modes in Emacs 29+.
-(use-package treesit-auto
-	:hook (after-init . global-treesit-auto-mode)
-  :config
-  (setq treesit-auto-install nil))
 
 ;;; Lsp =====================================================
 ;; check eglot-server-programs to know the language programs that corresponding
@@ -100,37 +64,6 @@
 
 ;; @ eldoc
 (setq eldoc-echo-area-use-multiline-p nil)
-
-;;; @ lsp-bridge ============================================
-;; (use-package yasnippet
-;;   :config
-;;   (yas-global-mode 1))
-;; (use-package posframe)
-;; (push (expand-file-name "modules/lsp-bridge" user-emacs-directory) load-path)
-
-;; (require 'lsp-bridge)
-;; (require 'lsp-bridge-jdtls) 
-;; (dolist (mode-hook '(java-ts-mode-hook rust-ts-mode-hook))
-;; 	(add-to-list 'lsp-bridge-default-mode-hooks mode-hook))
-;; (global-lsp-bridge-mode)
-;; ;; (add-hook 'after-init-hook '(lambda () ((global-lsp-bridge-mode))))
-;; (setq acm-candidate-match-function 'orderless-flex
-;;   lsp-bridge-enable-auto-import t
-;;   lsp-bridge-complete-manually t)
-;; (evil-define-key 'normal lsp-bridge-mode-map (kbd "M-k") #'lsp-bridge-popup-documentation-scroll-up)
-;; (evil-define-key 'normal lsp-bridge-mode-map (kbd "M-j") #'lsp-bridge-popup-documentation-scroll-down)
-
-;; (setq evil-lookup-func #'lsp-bridge-popup-documentation)
-;; (evil-define-key 'insert acm-mode-map (kbd "C-n") #'acm-select-next)
-;; (evil-define-key 'insert acm-mode-map (kbd "C-p") #'acm-select-prev)
-;; (evil-define-key 'insert acm-mode-map (kbd "C-j") #'acm-select-next)
-;; (evil-define-key 'insert acm-mode-map (kbd "C-k") #'acm-select-prev)
-
-;; (evil-define-key 'insert acm-mode-map (kbd "M-n") #'acm-select-next-page)
-;; (evil-define-key 'insert acm-mode-map (kbd "M-p") #'acm-select-prev-page)
-;; ;; (evil-define-key 'insert acm-mode-map (kbd "M-j") #'acm-select-next-page)
-;; ;; (evil-define-key 'insert acm-mode-map (kbd "M-k") #'acm-select-prev-page)
-;; (add-hook 'acm-mode-hook #'evil-normalize-keymaps)
 
 ;;; citre ===================================================
 (use-package citre
