@@ -716,44 +716,25 @@ point."
   (other-window 1)
   (call-interactively #'find-file))
 
-
-;; Evil Related
-;;
-;; (defun mk/evil-search-symbol-forward ()
-;;   "Symbol instead of word in normal state. This function aims to replace the default '*' binding in evil."
-;;   (interactive)
-;;   (cond
-;;     ;; visual mode use package `evil-visualstar`
-;;     ((evil-normal-state-p)
-;;       (highlight-symbol-at-point)
-;;       (evil-search-word-forward 1 (symbol-at-point)))))
-;; 
-;; (defun mk/evil-search-symbol-backward ()
-;;   "Symbol instead of word in normal state. This function aims to replace the default '*' binding in evil."
-;;   (interactive)
-;;   (cond
-;;     ;; visual mode use package `evil-visualstar`
-;;     ((evil-normal-state-p)
-;;       (highlight-symbol-at-point)
-;;       (evil-search-word-backward 1 (symbol-at-point)))))
-;; 
-;; (defun mk/unhighlight-search()
-;;   "Unhighlight all symbols highlighted by `highlight-symbol-at-point' in `mk/evil-search-symbol-*'"
-;;   (interactive)
-;;   (unhighlight-regexp t))
-;; (defun djoyner/evil-shift-left-visual ()
-;;   "Continuous evil shift-left."
-;;   (interactive)
-;;   (evil-shift-left (region-beginning) (region-end))
-;;   (evil-normal-state)
-;;   (evil-visual-restore))
-;; 
-;; (defun djoyner/evil-shift-right-visual ()
-;;   "Continuous evil shift-right."
-;;   (interactive)
-;;   (evil-shift-right (region-beginning) (region-end))
-;;   (evil-normal-state)
-;;   (evil-visual-restore))
+(defun org-insert-picture-from-dired ()
+  "Open a dired buffer at a hardcoded path and let the user select images to insert into the Org-mode buffer."
+  (interactive)
+  (let ((image-dir "~/notes")  ; Hardcoded directory path
+         (org-buffer (current-buffer))  ; Remember the current (Org) buffer
+         (my-find-args "-type f -path '*-img/*'"))  ; Note the change of variable name
+    (when (file-directory-p image-dir)
+      (find-dired image-dir my-find-args)  ; Using the new variable name
+      (message "Mark images with `m` and press `i` to insert into Org buffer.")
+      (local-set-key (kbd "i")
+        (lambda ()
+          (interactive)
+          (let ((selected-images (dired-get-marked-files)))
+            (switch-to-buffer org-buffer)  ; Switch back to the original Org buffer
+            (when (eq major-mode 'org-mode)
+              (dolist (img selected-images)
+                (insert (format "#+ATTR_ORG: :width 600\n[[file:%s]]\n" img)))
+              (org-display-inline-images))
+            ))))))
 
 (provide 'init-key)
 
