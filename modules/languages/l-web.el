@@ -128,6 +128,10 @@ Due to web-mode bug for emacs client, some customizable values need to be set af
 (mk/add-web-local-map-hook '(html-mode-hook mhtml-mode-hook vue-mode-hook css-mode-hook css-ts-mode)) ;; web, vue(defined in l-web.el) and css
 
 
-(use-package jest
-  :hook ((vue-mode . jest-minor-mode)(js-ts-mode . jest-minor-mode)))
+;; (use-package jest
+;;   :hook ((vue-mode . jest-minor-mode)(js-ts-mode . jest-minor-mode)))
+(use-package jest-test-mode 
+  :ensure t 
+  :commands jest-test-mode
+  :hook (typescript-mode js-mode typescript-tsx-mode vue-mode))
 (provide 'l-web)

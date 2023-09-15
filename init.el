@@ -51,6 +51,7 @@
 (with-temp-message ""
   (require 'init-base)
   (require 'meow)
+  (require 'treesitter)
   ;; (require 'evil) ;; don't enable this module when enabling meow and init-key
   (require 'init-key)
   (require 'init-ui)
