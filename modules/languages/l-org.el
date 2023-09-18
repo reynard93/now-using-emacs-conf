@@ -6,7 +6,7 @@
 (require 'dig-my-grave)
 
 (use-package org
-  :straight nil
+  :straight t
 	:config
 	(setq
 	  org-directory "~/notes/"

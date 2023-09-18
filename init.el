@@ -4,9 +4,8 @@
 
 ;; straight.el
 ;; (setq straight-repository-branch "develop")
-
+(setq auth-source-debug t)
 ;; (setq debug-on-error t)
-
 (define-obsolete-variable-alias
   'native-comp-deferred-compilation-deny-list
   'native-comp-jit-compilation-deny-list
@@ -28,6 +27,7 @@
 
 (setq straight-use-package-by-default t)
 (straight-use-package 'use-package)
+(straight-use-package 'org)
 
 ;; (use-package benchmark-init ;; when needed, enable it
 ;;   :config
@@ -69,6 +69,7 @@
   (require 'my-debug)
   (require 'emacs-developer)
   (require 'hugo)
+  (require 'org-fc)
   (require 'osx-config))
 
 ;; load language

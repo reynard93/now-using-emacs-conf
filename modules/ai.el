@@ -29,4 +29,22 @@
   (setq mind-wave-api-key-path openai-api-key-path
     mind-wave-api-base "https://openai-proxy.animer.live/v1"))
 
+(use-package khoj
+  :after org
+  :straight (khoj :type git :host github :repo "khoj-ai/khoj" :files (:defaults "src/interface/emacs/khoj.el"))
+  ;; not mentioned in the online quick start, but this will prevent the emacs package
+  ;; downloading and configuring a separate khoj instance and will use already running
+  ;; one instead.
+  :config
+  (setq khoj-auto-setup nil))
+
+(use-package openai
+  :straight (openai :type git :host github :repo "emacs-openai/openai"))
+
+(use-package chatgpt
+  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt")
+  :requires openai
+  :config
+  (setq openai-key #'openai-key-auth-source))
+
 (provide 'ai)
